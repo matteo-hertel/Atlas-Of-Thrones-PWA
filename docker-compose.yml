@@ -1,0 +1,38 @@
+version: "3"
+services:
+        frontend:
+                image: nginx
+                volumes:
+                        - ./public:/usr/share/nginx/html
+                ports:
+                        - 8990:80
+        redis:
+                image: redis
+        db:
+                image: mdillon/postgis
+                #command: "psql atlas_of_thrones < /var/init/psql_setup/atlas_of_thrones.sql"
+                environment:
+                        - POSTGRES_DB=atlas_of_thrones 
+                        - POSTGRES_USER=root
+                volumes:
+                        - ./psql_setup:/var/init
+
+        backend:
+                image: node:carbon
+                volumes:
+                        - ./:/var/node
+                environment:
+                        - PORT=5000
+                        - REDIS_HOST=redis
+                        - REDIS_PORT=6379
+                        - DATABASE_URL=postgres://root@db:5432/atlas_of_thrones?ssl=false
+                command:
+                        node /var/node/server/index.js
+                depends_on:
+                        - db
+                        - redis
+                links:
+                        - redis
+                        - db
+                ports:
+                        - 5000:5000
