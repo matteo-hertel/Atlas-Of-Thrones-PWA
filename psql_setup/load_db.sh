@@ -1,4 +1,3 @@
-#!bin/bash
-#curl -lsfO https://cdn.patricktriest.com/atlas-of-thrones/atlas_of_thrones.sql
+#!/bin/bash
 #psql -f db_init.sql
-psql atlas_of_thrones < ./atlas_of_thrones.sql
+psql atlas_of_thrones < /var/init/atlas_of_thrones.sql
