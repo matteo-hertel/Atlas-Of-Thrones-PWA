@@ -9,3 +9,5 @@ database_setup/**/*.json
 ignore
 atlas_of_thrones.sql
 *.swp
+workbox-sw*
+sw.js
