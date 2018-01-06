@@ -10,13 +10,11 @@ services:
                 image: redis
         db:
                 image: mdillon/postgis
-                #command: "psql atlas_of_thrones < /var/init/psql_setup/atlas_of_thrones.sql"
                 environment:
                         - POSTGRES_DB=atlas_of_thrones 
                         - POSTGRES_USER=root
                 volumes:
-                        - ./psql_setup:/var/init
-
+                        - ./psql_setup:/tmp/data
         backend:
                 image: node:carbon
                 volumes:
