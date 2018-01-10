@@ -1,5 +1,4 @@
 -- Reset DB
-DROP DATABASE IF EXISTS atlas_of_thrones;
 CREATE DATABASE atlas_of_thrones;
 
 -- Connect to DB

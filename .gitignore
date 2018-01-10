@@ -8,3 +8,4 @@ database_setup/**/*.json
 *.log
 ignore
 atlas_of_thrones.sql
+*.swp
