@@ -1,6 +1,7 @@
 const path = require('path')
 const BabiliPlugin = require('babili-webpack-plugin');
 const workboxPlugin = require('workbox-webpack-plugin');
+const ChunkHashReplacePlugin = require('chunkhash-replace-webpack-plugin');
 
 // Babel loader for Transpiling ES8 Javascript for browser usage
 const babelLoader = {
@@ -43,7 +44,26 @@ const webpackConfig = {
 const runtimeCaching = []
 if (process.env.NODE_ENV === 'production') {
     // Minify for production build
-    webpackConfig.plugins = [new BabiliPlugin({})]
+    webpackConfig.plugins = [new BabiliPlugin({}),
+        new ChunkHashReplacePlugin({
+            src: './public/index.html',
+            dest: 'public/index.html',
+        }),
+    ]
+    runtimeCaching.push({
+        urlPattern: new RegExp('https://api.atlasofthrones.com'),
+        handler: 'staleWhileRevalidate'
+    })
+    webpackConfig.plugins = [
+        new workboxPlugin({
+            globDirectory: "public",
+            globPatterns: ['**/*.{html,js}'],
+            swDest: path.join("public", 'sw.js'),
+            clientsClaim: true,
+            skipWaiting: true,
+            runtimeCaching
+        })
+    ]
 } else {
     // Generate sourcemaps for dev build
     webpackConfig.devtool = 'eval-source-map'

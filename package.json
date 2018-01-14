@@ -7,6 +7,7 @@
     "start": "node index.js",
     "serve": "webpack --watch & http-server ./public",
     "dev": "NODE_ENV=local npm start & npm run serve",
+    "dev:prod": "NODE_ENV=production npm start & npm run serve",
     "build": "NODE_ENV=production webpack",
     "deploy-frontend": "npm run build && bash deploy.sh"
   },
@@ -28,6 +29,7 @@
   },
   "dependencies": {
     "axios": "0.16.2",
+    "chunkhash-replace-webpack-plugin": "0.0.24",
     "dotenv": "4.0.0",
     "fuse.js": "3.0.5",
     "ioredis": "3.1.4",

@@ -17,13 +17,13 @@ class ViewController {
     this.searchService = new SearchService() // Initialize search service
 
     // Initialize API service
-    if (window.location.hostname === 'localhost') {
+    if (window.location.hostname === 'localhosts') {
       this.api = new ApiService('http://localhost:5000/')
     } else {
       this.api = new ApiService('https://api.atlasofthrones.com/')
     }
 
-    this.locationPointTypes = [ 'castle', 'city', 'town', 'ruin', 'region', 'landmark' ]
+    this.locationPointTypes = ['castle', 'city', 'town', 'ruin', 'region', 'landmark']
     this.initializeComponents()
     this.loadMapData()
   }
@@ -37,34 +37,39 @@ class ViewController {
 
     // Initialize Map
     this.mapComponent = new Map('map-placeholder', {
-      events: { locationSelected: event => {
-        // Show data in infoComponent on "locationSelected" event
-        const { name, id, type } = event.detail
-        this.infoComponent.showInfo(name, id, type)
-      }}
+      events: {
+        locationSelected: event => {
+          // Show data in infoComponent on "locationSelected" event
+          const { name, id, type } = event.detail
+          this.infoComponent.showInfo(name, id, type)
+        }
+      }
     })
 
     // Initialize Layer Toggle Panel
     this.layerPanel = new LayerPanel('layer-panel-placeholder', {
       data: { layerNames: ['kingdom', ...this.locationPointTypes] },
-      events: { layerToggle:
-        // Toggle layer in map controller on "layerToggle" event
-        event => { this.mapComponent.toggleLayer(event.detail) }
+      events: {
+        layerToggle:
+                    // Toggle layer in map controller on "layerToggle" event
+                    event => { this.mapComponent.toggleLayer(event.detail) }
       }
     })
 
     // Initialize Search Panel
     this.searchBar = new SearchBar('search-panel-placeholder', {
       data: { searchService: this.searchService },
-      events: { resultSelected: event => {
-        // Show result on map when selected from search results
-        let searchResult = event.detail
-        if (!this.mapComponent.isLayerShowing(searchResult.layerName)) {
-          // Show result layer if currently hidden
-          this.layerPanel.toggleMapLayer(searchResult.layerName)
+      events: {
+        resultSelected: event => {
+          // Show result on map when selected from search results
+          let searchResult = event.detail
+          if (!this.mapComponent.isLayerShowing(searchResult.layerName)) {
+            // Show result layer if currently hidden
+            this.layerPanel.toggleMapLayer(searchResult.layerName)
+          }
+          this.mapComponent.selectLocation(searchResult.id, searchResult.layerName)
         }
-        this.mapComponent.selectLocation(searchResult.id, searchResult.layerName)
-      }}
+      }
     })
   }
 
@@ -101,13 +106,13 @@ class ViewController {
   }
 }
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').then(registration => {
-        console.log('SW registered: ', registration);
-      }).catch(registrationError => {
-        console.log('SW registration failed: ', registrationError);
-      });
-    });
-  }
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then(registration => {
+      console.log('SW registered: ', registration)
+    }).catch(registrationError => {
+      console.log('SW registration failed: ', registrationError)
+    })
+  })
+}
 
 window.ctrl = new ViewController()
